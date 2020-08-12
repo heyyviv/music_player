@@ -19,7 +19,7 @@ import java.io.IOException;
 public class player extends AppCompatActivity {
     String song_path,song_name;
     Button song_play_pause,pause;
-    MediaPlayer mediaplayer;
+
     TextView nametv;
     SeekBar progress;
     int pos=0,cur_music=0;
@@ -37,11 +37,10 @@ public class player extends AppCompatActivity {
             song_path = intent.getStringExtra("path");
             song_name = intent.getStringExtra("songname");
         }
-        mediaplayer=new MediaPlayer();
+
         nametv.setText(song_name);
         try {
-            mediaplayer.setDataSource(song_path);
-            mediaplayer.prepare();
+            MainActivity.prepare_song(song_path);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,10 +48,10 @@ public class player extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(cur_music%2==0) {
-                    mediaplayer.start();
+                    MainActivity.song_play();
                     song_play_pause.setText("PAUSE");
                 }else{
-                    mediaplayer.pause();
+                    MainActivity.song_pause();
                     song_play_pause.setText("PLAY");
                 }
                 cur_music++;
@@ -62,17 +61,17 @@ public class player extends AppCompatActivity {
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaplayer.pause();
+                MainActivity.free_mediaplayer();
             }
         });
 
-        progress.setMax(mediaplayer.getDuration()/1000);
+        progress.setMax(MainActivity.get_duration()/1000);
          final Handler mhandeler=new Handler();
          player.this.runOnUiThread(new Runnable() {
              @Override
              public void run() {
-                 if(mediaplayer!=null){
-                     int current_pos=mediaplayer.getCurrentPosition()/1000;
+                 if(MainActivity.is_working()){
+                     int current_pos=MainActivity.get_song_position()/1000;
                      progress.setProgress(current_pos);
                  }
                  mhandeler.postDelayed(this,1000);
@@ -81,8 +80,8 @@ public class player extends AppCompatActivity {
          progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
              @Override
              public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                 if(mediaplayer!=null && fromUser){
-                        mediaplayer.seekTo(progress*1000);
+                 if(MainActivity.is_working()==true && fromUser){
+                        MainActivity.song_seek(progress);
                  }
              }
 
@@ -99,19 +98,18 @@ public class player extends AppCompatActivity {
     }
 
 
-    @Override
+    /*@Override
     protected void onStop() {
         super.onStop();
-        mediaplayer.stop();
-        mediaplayer.release();
-    }
+        MainActivity.free_mediaplayer();
+    }*/
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putCharSequence("path",song_path);
         outState.putCharSequence("name",song_name);
-        outState.putInt("position",mediaplayer.getCurrentPosition()/1000);
+        outState.putInt("position",MainActivity.get_song_position()/1000);
     }
 
     @Override
@@ -120,7 +118,7 @@ public class player extends AppCompatActivity {
         song_path=savedInstanceState.getString("path");
         song_name=savedInstanceState.getString("name");
         pos=savedInstanceState.getInt("position");
-        mediaplayer.seekTo(pos*1000);
-        mediaplayer.start();
+        MainActivity.song_seek(pos);
+        MainActivity.song_play();
     }
 }
