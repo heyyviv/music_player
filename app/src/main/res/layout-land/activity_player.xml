@@ -7,24 +7,60 @@
     android:orientation="vertical"
     tools:context=".player"
     android:layout_gravity="center">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="left"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:src="@color/colorPrimary"
+        android:id="@+id/image_frame"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
         android:id="@+id/songname"
         android:fontFamily="sans-serif-black"
         android:layout_gravity="center"
         android:text="NAME"
         android:textSize="30sp"
-        android:layout_marginTop="30dp"
+
         />
-    <SeekBar
-        android:layout_width="450dp"
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="60dp"
-        android:id="@+id/song_progress"
-        />
+        android:orientation="horizontal"
+        android:layout_marginTop="60dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mm:ss"
+            android:padding="9dp"
+            android:id="@+id/start_time"
+            />
+        <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:padding="9dp"
+            android:id="@+id/song_progress"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mm:ss"
+            android:padding="9dp"
+            android:id="@+id/end_time"
+            />
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

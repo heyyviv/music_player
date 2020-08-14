@@ -65,4 +65,11 @@ public class MainActivity extends AppCompatActivity {
     public static  int get_duration(){
         return mediaplayer.getDuration();
     }
+
+    public  static int[] time_format(int time){
+        int ss=time/1000;
+        int mm=ss/60;
+        ss=ss-(60*mm);
+        return new int[]{mm,ss};
+    }
 }
