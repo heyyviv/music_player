@@ -23,18 +23,20 @@ import java.io.IOException;
 
 public class player extends AppCompatActivity {
     String song_path,song_name;
-    Button song_play_pause,pause;
+    Button song_play_pause,song_next,song_prev;
     ImageView cover_img;
     TextView nametv,str_time,end_time;
     SeekBar progress;
     int pos=0,cur_music=0;
+    int id=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         Intent intent=getIntent();
-        song_play_pause=findViewById(R.id.play);
-        pause=findViewById(R.id.pause);
+        song_play_pause=findViewById(R.id.song_play);
+        song_prev=findViewById(R.id.song_prev);
+        song_next=findViewById(R.id.song_next);
         cover_img=findViewById(R.id.image_frame);
         nametv=findViewById(R.id.songname);
         progress=findViewById(R.id.song_progress);
@@ -44,32 +46,59 @@ public class player extends AppCompatActivity {
         if(intent!=null) {
             song_path = intent.getStringExtra("path");
             song_name = intent.getStringExtra("songname");
+            id=intent.getIntExtra("id",0);
         }
 
         nametv.setText(song_name);
         try {
-            MainActivity.prepare_song(song_path);
+            MainActivity.prepare_song(song_path,song_name,id);
         } catch (IOException e) {
             e.printStackTrace();
         }
         song_play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cur_music%2==0) {
+                if(!MainActivity.is_playing()) {
                     MainActivity.song_play();
-                    song_play_pause.setText("PAUSE");
+                    //song_play_pause.setText("PAUSE");
+                    song_play_pause.setBackgroundResource(R.drawable.pause);
                 }else{
                     MainActivity.song_pause();
-                    song_play_pause.setText("PLAY");
+                    //song_play_pause.setText("PLAY");
+                    song_play_pause.setBackgroundResource(R.drawable.play);
                 }
-                cur_music++;
 
             }
         });
-        pause.setOnClickListener(new View.OnClickListener() {
+        song_prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.free_mediaplayer();
+                int kk = id - 1;
+                if (kk > 0) {
+                    MainActivity.free_mediaplayer();
+                    Intent intent = new Intent(v.getContext(), player.class);
+                    intent.putExtra("path", music_adapter.allsong.get(kk).getPath());
+                    intent.putExtra("songname", music_adapter.allsong.get(kk).getSong());
+                    intent.putExtra("id",kk);
+                    finish();
+                    startActivity(intent);
+                }
+            }
+        });
+        song_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int kk = id + 1;
+                if (kk <music_adapter.allsong.size()) {
+                    MainActivity.free_mediaplayer();
+                    Intent intent = new Intent(v.getContext(), player.class);
+                    intent.putExtra("path", music_adapter.allsong.get(kk).getPath());
+                    intent.putExtra("songname", music_adapter.allsong.get(kk).getSong());
+                    intent.putExtra("id",kk);
+                    finish();
+                    startActivity(intent);
+
+                }
             }
         });
         restoring_image(song_path);

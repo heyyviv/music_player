@@ -26,6 +26,7 @@ public class music_adapter extends RecyclerView.Adapter<music_adapter.MusicViewH
         LinearLayout container;
         TextView song,artist;
         audiomodel current_song;
+        int id;
         public MusicViewHolder(@NonNull final View itemView) {
             super(itemView);
             container=(LinearLayout) itemView.findViewById(R.id.container);
@@ -39,12 +40,22 @@ public class music_adapter extends RecyclerView.Adapter<music_adapter.MusicViewH
                    Intent intent=new Intent(v.getContext(),player.class);
                    intent.putExtra("path",current_song.getPath());
                    intent.putExtra("songname",current_song.getSong());
+                   intent.putExtra("id",id);
                    context.startActivity(intent);
                 }
             });
 
         }}
     public static List<audiomodel> allsong=new ArrayList<>();
+    public static void changed_song(int id,Context context){
+        if(id<allsong.size() && id>=0) {
+            Intent intent = new Intent(context, player.class);
+            intent.putExtra("path", allsong.get(id).getPath());
+            intent.putExtra("songname", allsong.get(id).getSong());
+            context.startActivity(intent);
+        }
+    }
+
 
     public static  void fetching_songs(Context context){
         try {
@@ -85,6 +96,7 @@ public class music_adapter extends RecyclerView.Adapter<music_adapter.MusicViewH
     public void onBindViewHolder(@NonNull music_adapter.MusicViewHolder holder, int position) {
             audiomodel current=allsong.get(position);
             holder.current_song=current;
+            holder.id=position;
             holder.song.setText(current.getSong());
             holder.artist.setText(current.getArtist());
     }
