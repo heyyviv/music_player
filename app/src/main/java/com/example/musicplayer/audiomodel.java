@@ -1,6 +1,6 @@
 package com.example.musicplayer;
 
-public class audiomodel {
+public class audiomodel implements  Comparable<audiomodel>{
     String song,artist,album,path;
     void setSong(String tsong){this.song=tsong;}
     String getSong(){return song;}
@@ -14,5 +14,9 @@ public class audiomodel {
     void setPath(String tpath){this.path=tpath;}
     String getPath(){return path;}
 
+    @Override
+    public int compareTo(audiomodel o) {
+        return this.song.compareTo(o.getSong());
+    }
 
 }

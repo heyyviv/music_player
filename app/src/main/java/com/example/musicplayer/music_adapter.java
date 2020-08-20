@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class music_adapter extends RecyclerView.Adapter<music_adapter.MusicViewHolder> {
@@ -82,7 +83,7 @@ public class music_adapter extends RecyclerView.Adapter<music_adapter.MusicViewH
         }catch (UnknownError e) {
             Log.v("musicplayer", "need strorage permisson");
         }
-
+        Collections.sort(allsong);
     }
 
     @NonNull
